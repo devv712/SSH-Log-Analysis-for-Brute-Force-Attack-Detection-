@@ -1,0 +1,7 @@
+Improved the website's look and feel
+
+Updated the website's design by adding a new navigation bar, updated styling for existing pages (index.html, about.html, help.html, results.html), added a new custom CSS file (`css/custom.css`), and added a new logo (`img/logo.svg`).  Also added the `werkzeug` library to `pyproject.toml`.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 5e17d316-c912-4057-9a4d-0b0878b9ee6e
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/b50a7ee9-7a29-4fad-bd13-0faf20f60931/be0ea149-aec4-43b4-ad4b-8173ad743e13.jpg
