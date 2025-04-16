@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - SSH Log Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="36" class="me-2">
+                <span>SSH Log Analyzer</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="bi bi-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/help">
+                            <i class="bi bi-question-circle"></i> Help
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary nav-link" id="theme-toggle" onclick="toggleTheme()">
+                            <i class="bi bi-sun"></i> Light Mode
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="hero-section p-5 text-center mb-4">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <h1 class="display-4 fw-bold">Help & Documentation</h1>
+                    <p class="lead mb-0">
+                        Everything you need to know about using SSH Log Analyzer
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="list-group sticky-top" style="top: 5rem;">
+                    <a href="#getting-started" class="list-group-item list-group-item-action border-0">
+                        <i class="bi bi-play-circle me-2"></i> Getting Started
+                    </a>
+                    <a href="#usage-guide" class="list-group-item list-group-item-action border-0">
+                        <i class="bi bi-signpost-split me-2"></i> Usage Guide
+                    </a>
+                    <a href="#interpreting-results" class="list-group-item list-group-item-action border-0">
+                        <i class="bi bi-graph-up me-2"></i> Interpreting Results
+                    </a>
+                    <a href="#troubleshooting" class="list-group-item list-group-item-action border-0">
+                        <i class="bi bi-wrench me-2"></i> Troubleshooting
+                    </a>
+                    <a href="#cli-options" class="list-group-item list-group-item-action border-0">
+                        <i class="bi bi-terminal me-2"></i> CLI Options
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-9">
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center" id="getting-started">
+                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-play-circle fs-3 text-primary"></i>
+                            </div>
+                            <h4 class="mb-0">Getting Started</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">
+                            The SSH Log Analyzer helps you analyze authentication logs to detect potential brute-force attacks against your SSH servers.
+                        </p>
+                        
+                        <div class="card border-0 bg-info bg-opacity-10 p-3 my-4">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="bi bi-info-circle-fill fs-1 text-info"></i>
+                                </div>
+                                <div>
+                                    <h5>Where to find your SSH logs</h5>
+                                    <ul class="mb-0">
+                                        <li>On most Linux systems: <code>/var/log/auth.log</code></li>
+                                        <li>On CentOS/RHEL: <code>/var/log/secure</code></li>
+                                        <li>On FreeBSD: <code>/var/log/auth.log</code></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-check-circle me-2 text-success"></i>Benefits</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled">
+                                            <li class="mb-3 d-flex">
+                                                <i class="bi bi-shield-check text-success me-3 fs-4"></i>
+                                                <div>
+                                                    <strong>Enhanced Security</strong>
+                                                    <p class="text-muted mb-0 small">Identify attack patterns and potential vulnerabilities</p>
+                                                </div>
+                                            </li>
+                                            <li class="mb-3 d-flex">
+                                                <i class="bi bi-speedometer2 text-success me-3 fs-4"></i>
+                                                <div>
+                                                    <strong>Efficient Analysis</strong>
+                                                    <p class="text-muted mb-0 small">Process large log files in seconds</p>
+                                                </div>
+                                            </li>
+                                            <li class="mb-3 d-flex">
+                                                <i class="bi bi-eye text-success me-3 fs-4"></i>
+                                                <div>
+                                                    <strong>Visual Insights</strong>
+                                                    <p class="text-muted mb-0 small">Visualize attack patterns and trends</p>
+                                                </div>
+                                            </li>
+                                            <li class="d-flex">
+                                                <i class="bi bi-file-earmark-text text-success me-3 fs-4"></i>
+                                                <div>
+                                                    <strong>Actionable Reports</strong>
+                                                    <p class="text-muted mb-0 small">Generate detailed security reports</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-tools me-2 text-primary"></i>Prerequisites</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled">
+                                            <li class="mb-3 d-flex align-items-center">
+                                                <span class="rounded-circle bg-primary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-file-text text-primary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>SSH Log File</strong>
+                                                    <p class="text-muted mb-0 small">Access to your server's SSH authentication logs</p>
+                                                </div>
+                                            </li>
+                                            <li class="mb-3 d-flex align-items-center">
+                                                <span class="rounded-circle bg-primary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-browser-chrome text-primary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>Modern Web Browser</strong>
+                                                    <p class="text-muted mb-0 small">Chrome, Firefox, Safari, or Edge</p>
+                                                </div>
+                                            </li>
+                                            <li class="d-flex align-items-center">
+                                                <span class="rounded-circle bg-primary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-person-check text-primary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>Basic Knowledge</strong>
+                                                    <p class="text-muted mb-0 small">Familiarity with SSH and server logs</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center" id="usage-guide">
+                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-signpost-split fs-3 text-success"></i>
+                            </div>
+                            <h4 class="mb-0">Step-by-Step Usage Guide</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h5 class="mb-2">1. Obtain your SSH log file</h5>
+                                <p>
+                                    You'll need access to your server's SSH authentication logs. You can typically find these at 
+                                    <code>/var/log/auth.log</code> on Linux systems. Copy this file to your local machine for analysis.
+                                </p>
+                                <div class="bg-dark text-light p-3 rounded mb-3 position-relative">
+                                    <button class="btn btn-sm btn-outline-light position-absolute top-0 end-0 mt-2 me-2 copy-to-clipboard"
+                                            data-copy-text="sudo cp /var/log/auth.log ~/my_auth.log
+sudo chmod 644 ~/my_auth.log">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                    <code>sudo cp /var/log/auth.log ~/my_auth.log</code><br>
+                                    <code>sudo chmod 644 ~/my_auth.log</code>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <h5 class="mb-2">2. Upload your log file</h5>
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <p>
+                                            On the home page, you can either:
+                                        </p>
+                                        <ul>
+                                            <li>Click the upload area to browse for your file</li>
+                                            <li>Drag and drop your log file directly</li>
+                                        </ul>
+                                        <p class="text-muted">
+                                            <small>The file will be processed locally in your browser - no data is sent to external servers.</small>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="text-center">
+                                            <div class="file-upload-area py-4 mx-auto" style="max-width: 300px;">
+                                                <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3"></i>
+                                                <p class="mb-0">Upload SSH Authentication Log File</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <h5 class="mb-2">3. Configure analysis parameters</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm p-3 mb-3">
+                                            <h6 class="mb-3">Required Parameters</h6>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <span class="rounded-circle bg-primary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-sliders text-primary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>Attack Threshold</strong>
+                                                    <p class="text-muted mb-0 small">Minimum number of failed attempts to consider as an attack (default: 5)</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="rounded-circle bg-primary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-clock text-primary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>Time Window</strong>
+                                                    <p class="text-muted mb-0 small">Time period in minutes during which failed attempts are counted (default: 60)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm p-3">
+                                            <h6 class="mb-3">Optional Parameters</h6>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <span class="rounded-circle bg-secondary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-globe text-secondary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>IP Filter</strong>
+                                                    <p class="text-muted mb-0 small">Filter results for a specific IP address</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <span class="rounded-circle bg-secondary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-person text-secondary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>Username Filter</strong>
+                                                    <p class="text-muted mb-0 small">Filter results for a specific username</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="rounded-circle bg-secondary bg-opacity-10 p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-calendar-date text-secondary"></i>
+                                                </span>
+                                                <div>
+                                                    <strong>Date Range</strong>
+                                                    <p class="text-muted mb-0 small">Restrict analysis to a specific time period</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <h5 class="mb-2">4. Analyze the log</h5>
+                                <p>
+                                    Click the "Analyze Log" button to start the analysis. This may take a few moments depending on the
+                                    size of your log file.
+                                </p>
+                                <div class="text-center">
+                                    <button class="btn btn-primary px-4 py-2">
+                                        <i class="bi bi-search me-2"></i> Analyze Log
+                                    </button>
+                                    <div class="mt-3">
+                                        <div class="progress progress-thin" style="height: 6px;">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 75%"></div>
+                                        </div>
+                                        <p class="mt-2 text-muted">
+                                            <small>Processing log file, this may take a moment...</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <h5 class="mb-2">5. Review the results</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm mb-3">
+                                            <div class="card-header bg-primary text-white">
+                                                <h6 class="mb-0">Analysis Summary</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-shield-exclamation text-danger me-2 fs-4"></i>
+                                                            <div>
+                                                                <div class="text-muted small">Attacks Detected</div>
+                                                                <div class="fs-5 fw-bold">12</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-x-circle text-primary me-2 fs-4"></i>
+                                                            <div>
+                                                                <div class="text-muted small">Failed Logins</div>
+                                                                <div class="fs-5 fw-bold">237</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-globe text-warning me-2 fs-4"></i>
+                                                            <div>
+                                                                <div class="text-muted small">Unique IPs</div>
+                                                                <div class="fs-5 fw-bold">45</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-person text-info me-2 fs-4"></i>
+                                                            <div>
+                                                                <div class="text-muted small">Usernames</div>
+                                                                <div class="fs-5 fw-bold">18</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-header bg-danger text-white">
+                                                <h6 class="mb-0">Attack Patterns</h6>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Source IP</th>
+                                                                <th>Attempts</th>
+                                                                <th>Severity</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>192.168.1.105</td>
+                                                                <td>43</td>
+                                                                <td><span class="badge bg-danger">Critical</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>10.0.0.15</td>
+                                                                <td>27</td>
+                                                                <td><span class="badge bg-warning text-dark">High</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>172.16.5.20</td>
+                                                                <td>12</td>
+                                                                <td><span class="badge bg-primary">Medium</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <h5 class="mb-2">6. Download the full report</h5>
+                                <p>
+                                    Click the "Download HTML Report" button to save a detailed report with visualizations.
+                                </p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary">
+                                        <i class="bi bi-file-earmark-text me-2"></i> Download HTML Report
+                                    </button>
+                                    <button class="btn btn-outline-secondary">
+                                        <i class="bi bi-clipboard me-2"></i> Copy Summary
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center" id="interpreting-results">
+                            <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-graph-up fs-3 text-info"></i>
+                            </div>
+                            <h4 class="mb-0">Interpreting the Results</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="mb-3">Attack Severity Classifications</h5>
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card border-0 bg-danger bg-opacity-10 p-3 text-center h-100">
+                                    <span class="severity-badge bg-danger d-inline-block mx-auto">Critical</span>
+                                    <h6 class="mt-3 mb-2">High Priority</h6>
+                                    <p class="small mb-0">Should be investigated immediately</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-0 bg-warning bg-opacity-10 p-3 text-center h-100">
+                                    <span class="severity-badge bg-warning text-dark d-inline-block mx-auto">High</span>
+                                    <h6 class="mt-3 mb-2">Significant Concern</h6>
+                                    <p class="small mb-0">Warrants thorough investigation</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-0 bg-primary bg-opacity-10 p-3 text-center h-100">
+                                    <span class="severity-badge bg-primary d-inline-block mx-auto">Medium</span>
+                                    <h6 class="mt-3 mb-2">Suspicious Behavior</h6>
+                                    <p class="small mb-0">Monitor closely</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card border-0 bg-info bg-opacity-10 p-3 text-center h-100">
+                                    <span class="severity-badge bg-info text-dark d-inline-block mx-auto">Low</span>
+                                    <h6 class="mt-3 mb-2">Potential Concern</h6>
+                                    <p class="small mb-0">Monitor as needed</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mb-3">Security Recommendations</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm mb-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-shield me-2"></i>For Detected Attacks</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item border-0 d-flex">
+                                                <i class="bi bi-1-circle-fill text-primary me-3 fs-5"></i>
+                                                <div>
+                                                    <strong>Implement Rate Limiting</strong>
+                                                    <p class="text-muted mb-0 small">Limit the number of SSH connection attempts from a single IP</p>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item border-0 d-flex">
+                                                <i class="bi bi-2-circle-fill text-primary me-3 fs-5"></i>
+                                                <div>
+                                                    <strong>Use Key Authentication</strong>
+                                                    <p class="text-muted mb-0 small">Disable password authentication and use SSH keys</p>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item border-0 d-flex">
+                                                <i class="bi bi-3-circle-fill text-primary me-3 fs-5"></i>
+                                                <div>
+                                                    <strong>Change SSH Port</strong>
+                                                    <p class="text-muted mb-0 small">Use a non-standard port instead of the default port 22</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-gear me-2"></i>Additional Measures</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item border-0 d-flex">
+                                                <i class="bi bi-lock-fill text-success me-3 fs-5"></i>
+                                                <div>
+                                                    <strong>Install Fail2ban</strong>
+                                                    <p class="text-muted mb-0 small">Automatically block IPs with repeated failed attempts</p>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item border-0 d-flex">
+                                                <i class="bi bi-people-fill text-success me-3 fs-5"></i>
+                                                <div>
+                                                    <strong>Review User Accounts</strong>
+                                                    <p class="text-muted mb-0 small">Remove unused accounts and enforce strong passwords</p>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item border-0 d-flex">
+                                                <i class="bi bi-calendar2-check-fill text-success me-3 fs-5"></i>
+                                                <div>
+                                                    <strong>Regular Monitoring</strong>
+                                                    <p class="text-muted mb-0 small">Schedule regular log analysis and security audits</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center" id="troubleshooting">
+                            <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-wrench fs-3 text-warning"></i>
+                            </div>
+                            <h4 class="mb-0">Troubleshooting</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="troubleshootingAccordion">
+                            <div class="accordion-item border-0 shadow-sm mb-3">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <i class="bi bi-file-earmark-x me-2 text-danger"></i> File Upload Errors
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#troubleshootingAccordion">
+                                    <div class="accordion-body">
+                                        <p>If you're having trouble uploading your log file:</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        Ensure the file is in text format
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        Check that the file has a .log or .txt extension
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        The maximum file size is 100MB
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                        Try splitting large log files into smaller chunks
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item border-0 shadow-sm mb-3">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <i class="bi bi-search me-2 text-warning"></i> No Attacks Detected
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#troubleshootingAccordion">
+                                    <div class="accordion-body">
+                                        <p>If no attacks are detected in your logs:</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-arrow-down-circle-fill text-primary me-2"></i>
+                                                        Try lowering the attack threshold
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-arrow-up-circle-fill text-primary me-2"></i>
+                                                        Increase the time window
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-file-text-fill text-primary me-2"></i>
+                                                        Check that your log file contains SSH authentication events
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-file-code-fill text-primary me-2"></i>
+                                                        Ensure the log format is compatible with the analyzer
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item border-0 shadow-sm">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <i class="bi bi-file-earmark-arrow-down me-2 text-info"></i> Report Generation Issues
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#troubleshootingAccordion">
+                                    <div class="accordion-body">
+                                        <p>If you encounter issues with report generation:</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-browser-chrome text-info me-2"></i>
+                                                        Make sure your browser allows pop-ups for downloading files
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-browser-edge text-info me-2"></i>
+                                                        Try using a different browser
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-hdd-fill text-info me-2"></i>
+                                                        Ensure you have sufficient disk space to save the report
+                                                    </li>
+                                                    <li class="list-group-item bg-transparent d-flex align-items-center">
+                                                        <i class="bi bi-calendar-date-fill text-info me-2"></i>
+                                                        For very large log files, try filtering by date range
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center" id="cli-options">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-terminal fs-3 text-secondary"></i>
+                            </div>
+                            <h4 class="mb-0">Command-Line Interface</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            The SSH Log Analyzer is also available as a command-line tool. You can run it directly:
+                        </p>
+                        <div class="bg-dark text-light p-3 rounded position-relative mb-4">
+                            <button class="btn btn-sm btn-outline-light position-absolute top-0 end-0 mt-2 me-2 copy-to-clipboard"
+                                    data-copy-text="python ssh_log_analyzer.py -f /path/to/auth.log -t 5 -w 60">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                            <code>python ssh_log_analyzer.py -f /path/to/auth.log -t 5 -w 60</code>
+                        </div>
+                        
+                        <h5 class="mb-3">Available Command Line Options</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Option</th>
+                                        <th>Short</th>
+                                        <th>Description</th>
+                                        <th>Default</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>--file</code></td>
+                                        <td><code>-f</code></td>
+                                        <td>Path to the auth.log file</td>
+                                        <td><code>/var/log/auth.log</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--output</code></td>
+                                        <td><code>-o</code></td>
+                                        <td>Output file for the report</td>
+                                        <td><code>ssh_attack_report.html</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--threshold</code></td>
+                                        <td><code>-t</code></td>
+                                        <td>Number of failed attempts to consider as an attack</td>
+                                        <td><code>5</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--window</code></td>
+                                        <td><code>-w</code></td>
+                                        <td>Time window in minutes to consider consecutive failures</td>
+                                        <td><code>60</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--ip</code></td>
+                                        <td><code>-i</code></td>
+                                        <td>Filter results for a specific IP address</td>
+                                        <td>None</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--user</code></td>
+                                        <td><code>-u</code></td>
+                                        <td>Filter results for a specific username</td>
+                                        <td>None</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--from-date</code></td>
+                                        <td></td>
+                                        <td>Start date for analysis (YYYY-MM-DD)</td>
+                                        <td>None</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--to-date</code></td>
+                                        <td></td>
+                                        <td>End date for analysis (YYYY-MM-DD)</td>
+                                        <td>None</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--no-viz</code></td>
+                                        <td></td>
+                                        <td>Disable visualization generation</td>
+                                        <td>False</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>--verbose</code></td>
+                                        <td><code>-v</code></td>
+                                        <td>Enable verbose output</td>
+                                        <td>False</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3">Example Commands</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light p-3 rounded position-relative mb-3">
+                                    <h6 class="text-warning">Basic Analysis</h6>
+                                    <code>python ssh_log_analyzer.py -f /var/log/auth.log</code>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light p-3 rounded position-relative mb-3">
+                                    <h6 class="text-warning">Custom Threshold</h6>
+                                    <code>python ssh_log_analyzer.py -f /var/log/auth.log -t 3 -w 30</code>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light p-3 rounded position-relative mb-3">
+                                    <h6 class="text-warning">Filter by IP</h6>
+                                    <code>python ssh_log_analyzer.py -f /var/log/auth.log -i 192.168.1.105</code>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-dark text-light p-3 rounded position-relative">
+                                    <h6 class="text-warning">Date Range</h6>
+                                    <code>python ssh_log_analyzer.py -f /var/log/auth.log --from-date 2023-01-01 --to-date 2023-01-31</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="40" class="me-3">
+                        <h5 class="mb-0">SSH Log Analyzer</h5>
+                    </div>
+                    <p class="mb-0 text-muted">A powerful tool for analyzing SSH authentication logs and detecting potential brute-force attacks.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="/about" class="text-decoration-none text-white-50">About</a></li>
+                        <li class="mb-2"><a href="/help" class="text-decoration-none text-white-50">Help & Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h5 class="mb-3">© 2025 SSH Log Analyzer</h5>
+                    <p class="text-muted">
+                        A secure and efficient way to detect, analyze, and respond to SSH brute-force attacks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About SSH Log Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="36" class="me-2">
+                <span>SSH Log Analyzer</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about">
+                            <i class="bi bi-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/help">
+                            <i class="bi bi-question-circle"></i> Help
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary nav-link" id="theme-toggle" onclick="toggleTheme()">
+                            <i class="bi bi-sun"></i> Light Mode
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="hero-section p-5 text-center">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <h1 class="display-4 fw-bold">About SSH Log Analyzer</h1>
+                    <p class="lead mb-0">
+                        A powerful tool for detecting and analyzing SSH brute-force attacks
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-info-circle fs-3 text-info"></i>
+                            </div>
+                            <h4 class="mb-0">What is SSH Log Analyzer?</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-md-7">
+                                <p class="lead">
+                                    SSH Log Analyzer is a sophisticated tool designed to help system administrators and security professionals analyze SSH authentication logs to detect potential brute-force attacks.
+                                </p>
+                                <p>
+                                    By analyzing patterns in authentication logs, this tool can identify security threats, provide actionable intelligence, and help strengthen your server's defenses against unauthorized access attempts.
+                                </p>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <div class="p-4 rounded-circle bg-primary bg-opacity-10 d-inline-block mb-3">
+                                    <i class="bi bi-shield-lock fs-1 text-primary"></i>
+                                </div>
+                                <h5>Advanced Security Analysis</h5>
+                                <p class="text-muted">Protecting your systems through data-driven insights</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-5">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm feature-card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-gear-wide-connected me-2"></i>What This Tool Does</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>
+                                            This tool parses SSH authentication log files (typically found at <code>/var/log/auth.log</code> on Linux systems) and:
+                                        </p>
+                                        <ul>
+                                            <li class="mb-2">
+                                                <i class="bi bi-search text-primary me-2"></i>
+                                                Identifies patterns of failed login attempts that could indicate brute-force attacks
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="bi bi-bar-chart text-primary me-2"></i>
+                                                Calculates attack severity based on frequency, intensity, and diversity of username attempts
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="bi bi-graph-up text-primary me-2"></i>
+                                                Creates visualizations to help understand attack patterns
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                                                Generates comprehensive HTML reports with security recommendations
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm feature-card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-code-slash me-2"></i>Technical Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>
+                                            SSH Log Analyzer is built with Python and leverages several powerful libraries:
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="bi bi-table text-primary"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">Pandas</h6>
+                                                        <small class="text-muted">Data manipulation</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="rounded-circle bg-success bg-opacity-10 p-2 me-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="bi bi-graph-up-arrow text-success"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">Matplotlib</h6>
+                                                        <small class="text-muted">Data visualization</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="rounded-circle bg-info bg-opacity-10 p-2 me-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="bi bi-globe text-info"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">Flask</h6>
+                                                        <small class="text-muted">Web interface</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="bi bi-braces text-warning"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">RegEx</h6>
+                                                        <small class="text-muted">Log parsing</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card border-0 shadow-sm feature-card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>How Attack Detection Works</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>
+                                            The core of the analyzer uses a pattern detection algorithm that identifies potential attacks based on:
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 bg-opacity-10 bg-primary p-3 text-center h-100">
+                                                    <i class="bi bi-hash fs-2 text-primary mb-3"></i>
+                                                    <h6>Attempt Count</h6>
+                                                    <p class="small mb-0">Number of failed attempts from a single IP address</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 bg-opacity-10 bg-primary p-3 text-center h-100">
+                                                    <i class="bi bi-clock-history fs-2 text-primary mb-3"></i>
+                                                    <h6>Time Window</h6>
+                                                    <p class="small mb-0">Period in which these attempts occur</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 bg-opacity-10 bg-primary p-3 text-center h-100">
+                                                    <i class="bi bi-people fs-2 text-primary mb-3"></i>
+                                                    <h6>Username Diversity</h6>
+                                                    <p class="small mb-0">Different accounts targeted</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 bg-opacity-10 bg-primary p-3 text-center h-100">
+                                                    <i class="bi bi-speedometer2 fs-2 text-primary mb-3"></i>
+                                                    <h6>Attempt Frequency</h6>
+                                                    <p class="small mb-0">Rate of attempts (per minute)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="mt-4 mb-3">Attack Severity Classifications</h5>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 shadow-sm">
+                                                    <div class="card-header bg-danger text-white text-center">
+                                                        <h6 class="mb-0">Critical Severity</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="bi bi-check-circle-fill text-danger me-2"></i>Highly automated</li>
+                                                            <li><i class="bi bi-check-circle-fill text-danger me-2"></i>Very high frequency</li>
+                                                            <li><i class="bi bi-check-circle-fill text-danger me-2"></i>Multiple usernames</li>
+                                                            <li><i class="bi bi-check-circle-fill text-danger me-2"></i>Persistent attempts</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 shadow-sm">
+                                                    <div class="card-header bg-warning text-dark text-center">
+                                                        <h6 class="mb-0">High Severity</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="bi bi-check-circle-fill text-warning me-2"></i>Likely automated</li>
+                                                            <li><i class="bi bi-check-circle-fill text-warning me-2"></i>High frequency</li>
+                                                            <li><i class="bi bi-check-circle-fill text-warning me-2"></i>Some username variety</li>
+                                                            <li><i class="bi bi-check-circle-fill text-warning me-2"></i>Sustained pattern</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 shadow-sm">
+                                                    <div class="card-header bg-primary text-white text-center">
+                                                        <h6 class="mb-0">Medium Severity</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Suspicious behavior</li>
+                                                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Moderate frequency</li>
+                                                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Limited targeting</li>
+                                                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Potential threat</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card mb-3 border-0 shadow-sm">
+                                                    <div class="card-header bg-info text-white text-center">
+                                                        <h6 class="mb-0">Low Severity</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <ul class="list-unstyled">
+                                                            <li><i class="bi bi-check-circle-fill text-info me-2"></i>Possible attack</li>
+                                                            <li><i class="bi bi-check-circle-fill text-info me-2"></i>Low frequency</li>
+                                                            <li><i class="bi bi-check-circle-fill text-info me-2"></i>Single username</li>
+                                                            <li><i class="bi bi-check-circle-fill text-info me-2"></i>Low confidence</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm feature-card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-lock me-2"></i>Privacy & Security</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="me-3">
+                                                <div class="rounded-circle bg-success bg-opacity-10 p-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-shield-check fs-2 text-success"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>
+                                                    All log analysis is performed locally in your browser. No log data is sent to external servers.
+                                                </p>
+                                                <ul>
+                                                    <li>Analysis runs completely in your browser</li>
+                                                    <li>Log files remain on your system</li>
+                                                    <li>Reports are generated client-side</li>
+                                                    <li>No data is sent to external services</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm feature-card h-100">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-code-slash me-2"></i>Open Source</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="me-3">
+                                                <div class="rounded-circle bg-primary bg-opacity-10 p-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-github fs-2 text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>
+                                                    SSH Log Analyzer is open-source software, making it transparent, community-supported, and continuously improved.
+                                                </p>
+                                                <p>
+                                                    The source code is available on GitHub, allowing anyone to:
+                                                </p>
+                                                <ul>
+                                                    <li>Inspect the code for security</li>
+                                                    <li>Contribute improvements</li>
+                                                    <li>Customize for specific needs</li>
+                                                    <li>Report issues and suggest features</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="40" class="me-3">
+                        <h5 class="mb-0">SSH Log Analyzer</h5>
+                    </div>
+                    <p class="mb-0 text-muted">A powerful tool for analyzing SSH authentication logs and detecting potential brute-force attacks.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="/about" class="text-decoration-none text-white-50">About</a></li>
+                        <li class="mb-2"><a href="/help" class="text-decoration-none text-white-50">Help & Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h5 class="mb-3">© 2025 SSH Log Analyzer</h5>
+                    <p class="text-muted">
+                        A secure and efficient way to detect, analyze, and respond to SSH brute-force attacks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

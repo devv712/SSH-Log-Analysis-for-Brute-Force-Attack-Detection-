@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Log Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="36" class="me-2">
+                <span>SSH Log Analyzer</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="bi bi-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/help">
+                            <i class="bi bi-question-circle"></i> Help
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary nav-link" id="theme-toggle" onclick="toggleTheme()">
+                            <i class="bi bi-sun"></i> Light Mode
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="hero-section p-5 text-center">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <h1 class="display-4 fw-bold">SSH Log Analysis & Security</h1>
+                    <p class="lead mb-4">
+                        Advanced detection of brute-force attacks and security insights from your SSH logs
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#analysis-form" class="btn btn-primary btn-lg px-4">
+                            <i class="bi bi-shield-lock"></i> Start Analysis
+                        </a>
+                        <a href="/help" class="btn btn-outline-light btn-lg px-4">
+                            <i class="bi bi-question-circle"></i> How It Works
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4><i class="bi bi-shield-lock"></i> SSH Log Analysis Tool</h4>
+                    </div>
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        <form action="/analyze" method="post" enctype="multipart/form-data" id="analysis-form">
+                            <!-- Enhanced file upload section -->
+                            <div class="mb-4">
+                                <div id="file-upload-area" class="file-upload-area">
+                                    <input type="file" class="d-none" id="log_file" name="log_file" required>
+                                    <div id="upload-prompt">
+                                        <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3 dashboard-icon"></i>
+                                        <h5>Upload SSH Authentication Log File</h5>
+                                        <p class="text-muted">
+                                            Drag and drop your log file here, or click to browse
+                                        </p>
+                                        <p class="small text-muted">
+                                            Accepts auth.log, secure, or any text log file with SSH authentication data
+                                        </p>
+                                    </div>
+                                    <div id="file-info" class="d-none">
+                                        <i class="bi bi-file-earmark-text fs-1 text-success mb-3"></i>
+                                        <h5 id="selected-file-name">filename.log</h5>
+                                        <p id="selected-file-size" class="text-muted">0 KB</p>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" 
+                                                onclick="document.getElementById('log_file').value=''; document.getElementById('file-info').classList.add('d-none'); document.getElementById('upload-prompt').classList.remove('d-none');">
+                                            Change File
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="mb-3">Analysis Settings</h5>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card border-0 p-3 bg-opacity-25 feature-card">
+                                        <h6 class="mb-3">Attack Detection Parameters</h6>
+                                        <div class="mb-3">
+                                            <label for="threshold" class="form-label">
+                                                Attack Threshold
+                                                <i class="bi bi-info-circle ms-1 text-primary" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Number of failed login attempts to consider as an attack. Lower values may produce more false positives."></i>
+                                            </label>
+                                            <input type="number" class="form-control input-field" id="threshold" name="threshold" min="2" value="5">
+                                        </div>
+                                        <div>
+                                            <label for="time_window" class="form-label">
+                                                Time Window (minutes)
+                                                <i class="bi bi-info-circle ms-1 text-primary" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Time period in minutes during which failed attempts are counted together."></i>
+                                            </label>
+                                            <input type="number" class="form-control input-field" id="time_window" name="time_window" min="1" value="60">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card border-0 p-3 bg-opacity-25 feature-card">
+                                        <h6 class="mb-3">Filtering Options</h6>
+                                        <div class="mb-3">
+                                            <label for="ip_filter" class="form-label">
+                                                IP Address Filter (optional)
+                                                <i class="bi bi-info-circle ms-1 text-primary" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Filter analysis to a specific IP address."></i>
+                                            </label>
+                                            <input type="text" class="form-control input-field" id="ip_filter" name="ip_filter" 
+                                                   placeholder="e.g., 192.168.1.1">
+                                        </div>
+                                        <div>
+                                            <label for="user_filter" class="form-label">
+                                                Username Filter (optional)
+                                                <i class="bi bi-info-circle ms-1 text-primary" 
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Filter analysis to a specific username."></i>
+                                            </label>
+                                            <input type="text" class="form-control input-field" id="user_filter" name="user_filter" 
+                                                   placeholder="e.g., root">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card border-0 p-3 mb-4 bg-opacity-25 feature-card">
+                                <h6 class="mb-3">Date Range (optional)</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="from_date" class="form-label">From Date</label>
+                                            <input type="date" class="form-control input-field" id="from_date" name="from_date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="to_date" class="form-label">To Date</label>
+                                            <input type="date" class="form-control input-field" id="to_date" name="to_date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="submit-button">
+                                    <i class="bi bi-search"></i> Analyze Log
+                                </button>
+                                
+                                <div id="loading-spinner" class="d-none mt-3">
+                                    <div class="progress progress-thin" style="height: 6px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                    <p class="mt-2 text-muted">
+                                        <small>Processing log file, this may take a moment...</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 border-0 shadow-sm feature-card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-shield-exclamation fs-3 text-primary dashboard-icon"></i>
+                            </div>
+                            <h5 class="mb-0">Attack Detection</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Identify potential brute-force attacks based on patterns of failed login attempts.
+                        </p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Multiple failed attempts from one IP</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Attempts on different user accounts</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Analyze attack patterns and severity</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4 border-0 shadow-sm feature-card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-graph-up fs-3 text-success dashboard-icon"></i>
+                            </div>
+                            <h5 class="mb-0">Visualize Patterns</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Create visual representations of attack patterns.
+                        </p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Failed attempts over time</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Top source IPs</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Hourly distribution of attacks</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Username diversity analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4 border-0 shadow-sm feature-card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-journal-text fs-3 text-warning dashboard-icon"></i>
+                            </div>
+                            <h5 class="mb-0">Detailed Reports</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            Generate detailed HTML reports with security recommendations.
+                        </p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Attack severity analysis</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Top offenders identification</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Security recommendations</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Visualizations included</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="40" class="me-3">
+                        <h5 class="mb-0">SSH Log Analyzer</h5>
+                    </div>
+                    <p class="mb-0 text-muted">A powerful tool for analyzing SSH authentication logs and detecting potential brute-force attacks.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="/about" class="text-decoration-none text-white-50">About</a></li>
+                        <li class="mb-2"><a href="/help" class="text-decoration-none text-white-50">Help & Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h5 class="mb-3">© 2025 SSH Log Analyzer</h5>
+                    <p class="text-muted">
+                        A secure and efficient way to detect, analyze, and respond to SSH brute-force attacks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

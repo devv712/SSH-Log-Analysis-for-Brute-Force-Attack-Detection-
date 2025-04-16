@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Log Analysis Results</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="36" class="me-2">
+                <span>SSH Log Analyzer</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="bi bi-house-door"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="bi bi-info-circle"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/help">
+                            <i class="bi bi-question-circle"></i> Help
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary nav-link" id="theme-toggle" onclick="toggleTheme()">
+                            <i class="bi bi-sun"></i> Light Mode
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="hero-section p-5 text-center mb-4">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <h1 class="display-4 fw-bold">Analysis Complete</h1>
+                    <p class="lead mb-0">
+                        Your SSH log file has been analyzed successfully
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-shield-check fs-3 text-success"></i>
+                            </div>
+                            <h4 class="mb-0">Analysis Results</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="stats-card p-3 rounded">
+                                    <h6 class="text-muted mb-2">Failed Login Attempts</h6>
+                                    <div class="stats-number">{{ stats.total_failures }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stats-card stats-card-warning p-3 rounded">
+                                    <h6 class="text-muted mb-2">Unique IPs</h6>
+                                    <div class="stats-number">{{ stats.unique_ips }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stats-card stats-card-success p-3 rounded">
+                                    <h6 class="text-muted mb-2">Unique Usernames</h6>
+                                    <div class="stats-number">{{ stats.unique_usernames }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stats-card stats-card-danger p-3 rounded">
+                                    <h6 class="text-muted mb-2">Attacks Detected</h6>
+                                    <div class="stats-number">{{ stats.attack_count }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-calendar-range me-2"></i>Analysis Period</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="timeline">
+                                            <div class="timeline-item">
+                                                <h6><i class="bi bi-clock-history me-2"></i>Analyzed from</h6>
+                                                <p class="ms-4 mb-0 fs-5">{{ stats.earliest_date }}</p>
+                                            </div>
+                                            <div class="timeline-item">
+                                                <h6><i class="bi bi-clock me-2"></i>Analyzed to</h6>
+                                                <p class="ms-4 mb-0 fs-5">{{ stats.latest_date }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Analysis Parameters</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Attack Threshold
+                                                <span class="badge bg-primary rounded-pill">{{ parameters.threshold }} attempts</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Time Window
+                                                <span class="badge bg-primary rounded-pill">{{ parameters.time_window }} minutes</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                IP Filter
+                                                <span class="badge bg-secondary rounded-pill">{{ parameters.ip_filter if parameters.ip_filter else 'None' }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Username Filter
+                                                <span class="badge bg-secondary rounded-pill">{{ parameters.user_filter if parameters.user_filter else 'None' }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-center my-4">
+                            <div class="btn-group shadow">
+                                <a href="/download/{{ filename }}" class="btn btn-primary btn-lg px-4">
+                                    <i class="bi bi-file-earmark-text me-2"></i> Download HTML Report
+                                </a>
+                                <button type="button" class="btn btn-primary btn-lg copy-to-clipboard" 
+                                        data-copy-text="Attack Patterns: {{ stats.attack_count }} | Failed Logins: {{ stats.total_failures }} | Unique IPs: {{ stats.unique_ips }}">
+                                    <i class="bi bi-clipboard me-2"></i> Copy Summary
+                                </button>
+                                <a href="/" class="btn btn-outline-secondary btn-lg px-4">
+                                    <i class="bi bi-arrow-left me-2"></i> New Analysis
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if attack_data %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-danger bg-opacity-10 p-3 me-3">
+                                    <i class="bi bi-shield-exclamation fs-3 text-danger"></i>
+                                </div>
+                                <h4 class="mb-0">Detected Attack Patterns</h4>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" id="filter-table-input" placeholder="Filter results...">
+                                </div>
+                                <button class="btn btn-outline-secondary" onclick="exportTableToCSV('attacks-table', 'ssh_attacks.csv')">
+                                    <i class="bi bi-download"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover sortable-table filterable-table" id="attacks-table">
+                                <thead>
+                                    <tr>
+                                        <th class="sortable-header">Source IP</th>
+                                        <th class="sortable-header">Primary Username</th>
+                                        <th class="sortable-header">Start Time</th>
+                                        <th class="sortable-header">End Time</th>
+                                        <th class="sortable-header">Attempts</th>
+                                        <th class="sortable-header">Max Frequency</th>
+                                        <th class="sortable-header">Severity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attack in attack_data %}
+                                    <tr class="{% if attack.attack_severity == 'Critical' %}table-danger{% elif attack.attack_severity == 'High' %}table-warning{% endif %}">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="me-2">{{ attack.source_ip }}</span>
+                                                <button class="btn btn-sm btn-outline-secondary copy-to-clipboard" 
+                                                        data-copy-text="{{ attack.source_ip }}" 
+                                                        data-bs-toggle="tooltip" 
+                                                        title="Copy IP">
+                                                    <i class="bi bi-clipboard"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td>{{ attack.username }}</td>
+                                        <td>{{ attack.start_time }}</td>
+                                        <td>{{ attack.end_time }}</td>
+                                        <td>{{ attack.attempt_count }}</td>
+                                        <td>{{ "%.2f"|format(attack.max_frequency) if attack.max_frequency > 0 else "N/A" }}</td>
+                                        <td>
+                                            <span class="severity-badge {% if attack.attack_severity == 'Critical' %}bg-danger{% elif attack.attack_severity == 'High' %}bg-warning text-dark{% elif attack.attack_severity == 'Medium' %}bg-primary{% else %}bg-info text-dark{% endif %}">
+                                                {{ attack.attack_severity }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr id="no-results-row" class="d-none">
+                                        <td colspan="7" class="text-center py-3">
+                                            <i class="bi bi-search me-2"></i> No results found matching your filter
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="card mt-4 border-0 bg-opacity-25 shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Security Recommendations</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% if stats.attack_count > 0 %}
+                                    <div class="col-md-6">
+                                        <h6 class="mb-3">Immediate Actions</h6>
+                                        <ul class="list-group list-group-flush mb-3">
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-shield-shaded text-danger me-2"></i>
+                                                Implement IP-based rate limiting for SSH connections
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-key text-danger me-2"></i>
+                                                Use SSH key authentication instead of password authentication
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-hash text-danger me-2"></i>
+                                                Consider changing the default SSH port (22) to a non-standard port
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="mb-3">Additional Measures</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-lock text-warning me-2"></i>
+                                                Implement fail2ban or a similar tool to automatically block repeated failed login attempts
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-people text-warning me-2"></i>
+                                                Review user accounts and permissions regularly
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-code-square text-warning me-2"></i>
+                                                Keep SSH server and client software up to date
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-12">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-shield-check text-success me-2"></i>
+                                                Continue monitoring for potential attacks
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-key text-success me-2"></i>
+                                                Consider implementing preventive measures like SSH key authentication
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <i class="bi bi-clock-history text-success me-2"></i>
+                                                Regularly review and update your security policies
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4 border-0 shadow">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                                <i class="bi bi-shield-check fs-3 text-info"></i>
+                            </div>
+                            <h4 class="mb-0">No Attack Patterns Detected</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info bg-opacity-25 border-0 shadow-sm">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="bi bi-info-circle-fill fs-1 text-info"></i>
+                                </div>
+                                <div>
+                                    <h5>Good News!</h5>
+                                    <p>No potential attack patterns were detected based on the current threshold ({{ parameters.threshold }} attempts within {{ parameters.time_window }} minutes).</p>
+                                    <p class="mb-0">You may want to adjust the threshold and analyze again if you suspect there are attacks that weren't detected.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-4 border-0 bg-opacity-25 shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Security Recommendations</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="d-flex mb-3">
+                                            <div class="me-3">
+                                                <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                                                    <i class="bi bi-shield-check fs-3 text-success"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h6>Continue Monitoring</h6>
+                                                <p class="mb-0 text-muted small">Keep analyzing logs regularly for potential security threats</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex mb-3">
+                                            <div class="me-3">
+                                                <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                                                    <i class="bi bi-key fs-3 text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h6>Use Key Authentication</h6>
+                                                <p class="mb-0 text-muted small">Implement SSH key authentication instead of passwords</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex mb-3">
+                                            <div class="me-3">
+                                                <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                                                    <i class="bi bi-file-earmark-text fs-3 text-info"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h6>Update Security Policies</h6>
+                                                <p class="mb-0 text-muted small">Regularly review and update your security protocols</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="SSH Log Analyzer Logo" height="40" class="me-3">
+                        <h5 class="mb-0">SSH Log Analyzer</h5>
+                    </div>
+                    <p class="mb-0 text-muted">A powerful tool for analyzing SSH authentication logs and detecting potential brute-force attacks.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="/about" class="text-decoration-none text-white-50">About</a></li>
+                        <li class="mb-2"><a href="/help" class="text-decoration-none text-white-50">Help & Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h5 class="mb-3">© 2025 SSH Log Analyzer</h5>
+                    <p class="text-muted">
+                        A secure and efficient way to detect, analyze, and respond to SSH brute-force attacks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
